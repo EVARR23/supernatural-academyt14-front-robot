@@ -6,7 +6,8 @@ Library    SeleniumLibrary
 
 *** Keywords ***
 Abrir o navegador
-    Open Browser      browser=chrome   options=add_argument(--headless)    
+    Open Browser      browser=chrome   
+    Maximize Browser Window
 Fechar o navegador
     Close All Browsers      
 
