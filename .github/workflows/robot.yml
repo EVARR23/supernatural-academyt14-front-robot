@@ -1,10 +1,12 @@
 name: Robot WorkFlow
 
-on: [push, WorkFlow_dispatch]  
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   test:
-    name: Teste dO FRONTEND com Robot Framework
+    name: Teste do FRONTEND com Robot Framework
     runs-on: ubuntu-24.04
 
     steps:
@@ -16,12 +18,25 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Instalar dependências
+      - name: Instalar dependências Python
         run: |
           pip install robotframework
           pip install robotframework-requests
           pip install robotframework-seleniumlibrary
+
+      - name: Instalar Chrome e ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
           
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+' | head -1)
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          rm chromedriver_linux64.zip
 
       - name: Executando os testes de FRONTEND do Robot
         run: |
@@ -46,7 +61,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: https://EVARR23.github.io/supernatural-academyt14-front-robot/report.html
+      url: https://EVARR23.github.io/supernatural-academyt14-front-robot
 
     steps:
       - name: Setup Pages
