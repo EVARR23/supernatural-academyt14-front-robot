@@ -6,8 +6,8 @@ Library  String
 
 *** Keywords ***
 Abrir o navegador
-    Open Browser                    browser=chrome  
-    Maximize Browser Window
+    Open Browser                    browser=chrome     options=${BROWSER_OPTIONS}   
+   
 Fechar o navegador
     Close All Browsers      
 
