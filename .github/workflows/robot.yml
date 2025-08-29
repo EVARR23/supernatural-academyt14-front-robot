@@ -1,0 +1,66 @@
+name: Robot WorkFlow
+
+on: [push, WorkFlow_dispatch]  
+
+jobs:
+  test:
+    name: Teste de API com Robot Framework
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Clonar arquivos do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Instalar dependências
+        run: |
+          pip install robotframework
+          pip install robotframework-requests
+
+      - name: Executando os testes de API do Robot
+        run: |
+          robot --outputdir logs/ tests/
+
+      - name: Upload do relatório
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-framework-report
+          path: logs
+
+  deploy:
+    name: Deploy GitHub Pages
+    runs-on: ubuntu-24.04
+    needs: test
+    if: always()
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: https://EVARR23.github.io/supernatural-academyt14-front-robot/report.html
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: robot-framework-report
+          path: results/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: results/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
