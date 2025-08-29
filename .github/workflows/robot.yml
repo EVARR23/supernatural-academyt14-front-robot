@@ -1,8 +1,5 @@
 name: Robot WorkFlow
 
-run: |
-    export ROBOT_BROWSER_OPTS="--headless --no-sandbox --disable-dev-shm-usage"
-    robot --outputdir logs/ tests/
 
 on: [push, WorkFlow_dispatch]  
 
@@ -29,6 +26,7 @@ jobs:
 
       - name: Executando os testes de FRONTEND do Robot
         run: |
+          export ROBOT_BROWSER_OPTS="--headless --no-sandbox --disable-dev-shm-usage"
           robot --outputdir logs/ tests/
 
       - name: Upload do relatório
