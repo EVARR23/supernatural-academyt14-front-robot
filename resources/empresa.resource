@@ -6,9 +6,10 @@ Library    SeleniumLibrary
 
 *** Keywords ***
 Abrir o navegador
-    Open Browser          browser=chrome     options=add_argument(--headless),add_argument(--no-sandbox),add_argument(--disable-dev-shm-usage)
-    
-   
+    Open Browser                    browser=chrome  
+    Maximize Browser Window
+Fechar o navegador
+    Close All Browsers      
 
 Passo 1 - Acessar a pagina de login
     Go To                             url=${urlBase}
