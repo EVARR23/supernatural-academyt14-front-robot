@@ -1,10 +1,10 @@
 name: Robot WorkFlow
 
-on: [push, WorkFlow_dispatch]  
+on: [push, workflow_dispatch]  
 
 jobs:
   test:
-    name: Teste dO FRONTEND com Robot Framework
+    name: Teste do FRONTEND com Robot Framework
     runs-on: ubuntu-24.04
 
     steps:
@@ -18,12 +18,15 @@ jobs:
 
       - name: Instalar dependências
         run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
           pip install robotframework
           pip install robotframework-requests
+          pip install robotframework-seleniumlibrary
 
       - name: Executando os testes de FRONTEND do Robot
         run: |
-          robot --outputdir logs/ tests/
+          robot --outputdir logs tests/
 
       - name: Upload do relatório
         uses: actions/upload-artifact@v4
@@ -44,7 +47,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: https://EVARR23.github.io/supernatural-academyt14-front-robot/report.html
+      url: https://EVARR23.github.io/supernatural-academyt14-front-robot/logs/report.html
 
     steps:
       - name: Setup Pages
@@ -56,10 +59,10 @@ jobs:
           name: robot-framework-report
           path: results/
 
-      - name: Upload artifact
+      - name: Upload artifact para GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: results/
+          path: results/logs
 
       - name: Deploy to GitHub Pages
         id: deployment
