@@ -4,7 +4,7 @@ on: [push, WorkFlow_dispatch]
 
 jobs:
   test:
-    name: Teste de API com Robot Framework
+    name: Teste dO FRONTEND com Robot Framework
     runs-on: ubuntu-24.04
 
     steps:
