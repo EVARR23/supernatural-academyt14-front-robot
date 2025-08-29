@@ -1,83 +1,49 @@
-name: Robot WorkFlow
+name: Teste Frontend Robot Framework
 
 on:
   push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   test:
-    name: Teste do FRONTEND com Robot Framework
     runs-on: ubuntu-24.04
-
     steps:
-      - name: Clonar arquivos do repositório
+      # 1️⃣ Clonar o repositório
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Configurar Python
+      # 2️⃣ Configurar Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Instalar dependências Python
+      # 3️⃣ Instalar dependências do sistema (incluindo Chrome)
+      - name: Install System Dependencies
         run: |
-          pip install robotframework
-          pip install robotframework-requests
-          pip install robotframework-seleniumlibrary
+          sudo apt-get update -y || true
+          sudo apt-get install -y wget unzip curl || true
 
-      - name: Instalar Chrome e ChromeDriver
+          # Instalar Google Chrome
+          wget -q -O google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
+          google-chrome --version
+
+      # 4️⃣ Instalar dependências do Python
+      - name: Install Python Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-          
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+' | head -1)
-          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          rm chromedriver_linux64.zip
+          pip install --upgrade pip
+          pip install robotframework selenium robotframework-seleniumlibrary
 
-      - name: Executando os testes de FRONTEND do Robot
+      # 5️⃣ Rodar testes Robot Framework
+      - name: Run Robot Tests
         run: |
-          robot --outputdir logs/ tests/
+          robot -d results tests/
 
-      - name: Upload do relatório
+      # 6️⃣ Upload de relatórios (opcional)
+      - name: Upload Robot Reports
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: robot-framework-report
-          path: logs
-
-  deploy:
-    name: Deploy GitHub Pages
-    runs-on: ubuntu-24.04
-    needs: test
-    if: always()
-
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: https://EVARR23.github.io/supernatural-academyt14-front-robot
-
-    steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: robot-framework-report
+          name: robot-reports
           path: results/
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: results/
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
