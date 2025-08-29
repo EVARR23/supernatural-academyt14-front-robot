@@ -1,2 +1,3 @@
 # Ignorar logs
 logs/
+.idea/
