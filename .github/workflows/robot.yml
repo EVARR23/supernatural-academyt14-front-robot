@@ -21,7 +21,7 @@ jobs:
           pip install robotframework
           pip install robotframework-requests
 
-      - name: Executando os testes de API do Robot
+      - name: Executando os testes de FRONTEND do Robot
         run: |
           robot --outputdir logs/ tests/
 
