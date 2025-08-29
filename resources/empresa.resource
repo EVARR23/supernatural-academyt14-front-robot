@@ -6,8 +6,7 @@ Library    SeleniumLibrary
 
 *** Keywords ***
 Abrir o navegador
-    Open Browser                    browser=chrome      options=add_argument(--headless)    options=add_argument(--no-sandbox)    options=add_argument(--disable-dev-shm-usage)
-    
+    Open Browser                    browser=chrome      options=add_argument(--headless)    
 Fechar o navegador
     Close All Browsers      
 
