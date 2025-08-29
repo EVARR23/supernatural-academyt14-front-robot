@@ -6,13 +6,11 @@ Library    SeleniumLibrary
 
 *** Keywords ***
 Abrir o navegador
-    ${RANDOM_DIR}=    Generate Random String    8
-    ${USER_DATA_DIR}=    Set Variable    --user-data-dir=/tmp/chrome-${RANDOM_DIR}
-    Open Browser    ${urlBase}    chrome    options=--headless --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=1920,1080 ${USER_DATA_DIR}
+    Open Browser                    browser=chrome  
     Maximize Browser Window
-
 Fechar o navegador
-    Close All Browsers
+    Close All Browsers      
+
 Passo 1 - Acessar a pagina de login
     Go To                             url=${urlBase}
   
