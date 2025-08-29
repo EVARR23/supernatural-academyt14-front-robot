@@ -6,7 +6,7 @@ Library  String
 
 *** Keywords ***
 Abrir o navegador
-    Open Browser                    browser=chrome     options=add_argument(--headless)    
+    Open Browser             browser=chrome     options=${OPTIONS}     
 Fechar o navegador
     Close All Browsers      
 
