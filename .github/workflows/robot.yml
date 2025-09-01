@@ -1,10 +1,11 @@
 name: Robot WorkFlow
 
-on: [push, workflow_dispatch]
+
+on: [push, WorkFlow_dispatch]  
 
 jobs:
   test:
-    name: Teste do FRONTEND com Robot Framework
+    name: Teste dO FRONTEND com Robot Framework
     runs-on: ubuntu-24.04
 
     steps:
@@ -16,23 +17,15 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Instalar o navegador Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
       - name: Instalar dependências
         run: |
-          # Use um arquivo requirements.txt para gerenciar as dependências de forma organizada
-          # pip install -r requirements.txt 
           pip install robotframework
           pip install robotframework-requests
           pip install robotframework-seleniumlibrary
-          pip install selenium  # A biblioteca selenium é uma dependência direta agora
+          
 
       - name: Executando os testes de FRONTEND do Robot
         run: |
-          # Assegure que o navegador será executado em modo headless e com as flags corretas para o ambiente de CI
           export ROBOT_BROWSER_OPTS="--headless --no-sandbox --disable-dev-shm-usage"
           robot --outputdir logs/ tests/
 
