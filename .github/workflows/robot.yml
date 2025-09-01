@@ -18,20 +18,19 @@ jobs:
 
       - name: Instalar dependências
         run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
           pip install robotframework
           pip install robotframework-requests
           pip install robotframework-seleniumlibrary
+          # Instala o Chrome e o ChromeDriver
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       - name: Executando os testes de FRONTEND do Robot
         run: |
           # Cria um diretório temporário único para o perfil do Chrome
           export CHROME_USER_DATA_DIR=$(mktemp -d)
           export ROBOT_BROWSER_OPTS="--headless --no-sandbox --disable-dev-shm-usage --user-data-dir=$CHROME_USER_DATA_DIR"
-          # Define o caminho do binário do Chromium
-          export CHROMIUM_BIN=/usr/bin/chromium-browser
-          robot --outputdir logs/ --variable BROWSER_OPTS:${ROBOT_BROWSER_OPTS} --variable BROWSER_BINARY:${CHROMIUM_BIN} tests/
+          robot --outputdir logs/ tests/
 
       - name: Upload do relatório
         uses: actions/upload-artifact@v4
